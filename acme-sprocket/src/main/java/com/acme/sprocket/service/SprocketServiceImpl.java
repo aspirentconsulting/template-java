@@ -4,8 +4,13 @@ import com.acme.sprocket.common.data.Page;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.UUID;
 import static org.slf4j.LoggerFactory.getLogger;
+import static com.acme.sprocket.common.data.request.PageUtility.toPage;
+import static java.util.Optional.of;
+import static java.util.Arrays.asList;
 
 @Service
 public class SprocketServiceImpl implements SprocketService {
@@ -18,28 +23,66 @@ public class SprocketServiceImpl implements SprocketService {
                 sprocketInsertDTO.getName(),
                 sprocketInsertDTO.getPitchDiameterInches(),
                 sprocketInsertDTO.getOutsideDiameterInches(),
-                sprocketInsertDTO.getPitchInches());
+                sprocketInsertDTO.getPitchInches(),
+                false);
     }
 
     @Override
     public SprocketResponseDTO findOne(final UUID id) {
         // TODO: implement repository logic
         // for now, echo back the id
-        return new SprocketResponseDTO(id, "Spacely", 5, 7, 3 );
+        return new SprocketResponseDTO(
+                id,
+                "Spacely",
+                5,
+                7,
+                3,
+                false );
     }
 
     @Override
     public SprocketResponseDTO update(UUID id, SprocketUpdateDTO sprocketUpdateDTO) {
-        return null;
+        // TODO: implement repository logic
+        return new SprocketResponseDTO(
+                id,
+                sprocketUpdateDTO.getName(),
+                sprocketUpdateDTO.getPitchDiameterInches(),
+                sprocketUpdateDTO.getOutsideDiameterInches(),
+                sprocketUpdateDTO.getPitchInches(),
+                false);
     }
 
     @Override
     public SprocketResponseDTO delete(UUID id) {
-        return null;
+        // TODO: implement repository logic
+        return new SprocketResponseDTO(
+                id,
+                "Spacely",
+                5,
+                7,
+                3,
+                true);
     }
 
     @Override
     public Page<SprocketResponseDTO> findAll(SprocketFindAllRequest sprocketFindAllRequest) {
-        return null;
+        SprocketResponseDTO response1 = new SprocketResponseDTO(
+                UUID.randomUUID(),
+                "Spacely",
+                5,
+                7,
+                3,
+                false);
+
+        SprocketResponseDTO response2 = new SprocketResponseDTO(
+                UUID.randomUUID(),
+                "Cogswell",
+                9,
+                11,
+                5,
+                false);
+
+        return toPage(asList(response1, response2), of(10), of(0));
+
     }
 }

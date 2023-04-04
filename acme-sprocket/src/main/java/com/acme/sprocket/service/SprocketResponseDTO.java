@@ -17,4 +17,5 @@ public class SprocketResponseDTO {
     private int pitchDiameterInches;
     private int outsideDiameterInches;
     private int pitchInches;
+    private boolean deleted = false;
 }
