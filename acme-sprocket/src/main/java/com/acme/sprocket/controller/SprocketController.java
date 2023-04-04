@@ -1,7 +1,7 @@
 package com.acme.sprocket.controller;
 
-import com.acme.sprocket.service.SprocketInsertRequest;
-import com.acme.sprocket.service.SprocketResponse;
+import com.acme.sprocket.service.SprocketInsertDTO;
+import com.acme.sprocket.service.SprocketResponseDTO;
 import com.acme.sprocket.service.SprocketService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +32,13 @@ public class SprocketController {
     }
 
     @GetMapping("sprocket/id/{id}")
-    public ResponseEntity<SprocketResponse> findOneById(@PathVariable UUID id) {
+    public ResponseEntity<SprocketResponseDTO> findOneById(@PathVariable UUID id) {
         return new ResponseEntity<>(sprocketService.findOne(id), HttpStatus.OK);
     }
 
     @PostMapping("sprocket")
-    public ResponseEntity<SprocketResponse> insert (@RequestBody @Valid SprocketInsertRequest sprocketInsertRequest) {
-        return new ResponseEntity<>(sprocketService.insert(sprocketInsertRequest), HttpStatus.CREATED);
+    public ResponseEntity<SprocketResponseDTO> insert (@RequestBody @Valid SprocketInsertDTO sprocketInsertDTO) {
+        return new ResponseEntity<>(sprocketService.insert(sprocketInsertDTO), HttpStatus.CREATED);
     }
 
 

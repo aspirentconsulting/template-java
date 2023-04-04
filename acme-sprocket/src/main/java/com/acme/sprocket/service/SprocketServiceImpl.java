@@ -10,17 +10,17 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class SprocketServiceImpl implements SprocketService {
     private static final Logger logger = getLogger(SprocketServiceImpl.class);
     @Override
-    public SprocketResponse insert(final SprocketInsertRequest sprocketInsertRequest) {
-        return new SprocketResponse(
+    public SprocketResponseDTO insert(final SprocketInsertDTO sprocketInsertDTO) {
+        return new SprocketResponseDTO(
                 UUID.randomUUID(),
-                sprocketInsertRequest.getName(),
-                sprocketInsertRequest.getPitchDiameterInches(),
-                sprocketInsertRequest.getOutsideDiameterInches(),
-                sprocketInsertRequest.getPitchInches());
+                sprocketInsertDTO.getName(),
+                sprocketInsertDTO.getPitchDiameterInches(),
+                sprocketInsertDTO.getOutsideDiameterInches(),
+                sprocketInsertDTO.getPitchInches());
     }
 
     @Override
-    public SprocketResponse findOne(final UUID id) {
-        return new SprocketResponse(UUID.randomUUID(), "Spacely", 5, 7, 3 );
+    public SprocketResponseDTO findOne(final UUID id) {
+        return new SprocketResponseDTO(UUID.randomUUID(), "Spacely", 5, 7, 3 );
     }
 }

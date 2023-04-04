@@ -11,7 +11,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class SprocketResponse {
+public class SprocketResponseDTO {
     private UUID id;
     private String name;
     private int pitchDiameterInches;
