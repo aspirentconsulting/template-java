@@ -36,7 +36,7 @@ public class SprocketController {
         return "HELLO SPROCKET";
     }
 
-    @GetMapping("sprocket/id/{id}")
+    @GetMapping("sprocket/{id}")
     public ResponseEntity<SprocketResponseDTO> findOneById(@PathVariable UUID id) {
         return new ResponseEntity<>(sprocketService.findOne(id), HttpStatus.OK);
     }
