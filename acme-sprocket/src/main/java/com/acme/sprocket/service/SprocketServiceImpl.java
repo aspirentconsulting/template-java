@@ -21,6 +21,8 @@ public class SprocketServiceImpl implements SprocketService {
 
     @Override
     public SprocketResponseDTO findOne(final UUID id) {
-        return new SprocketResponseDTO(UUID.randomUUID(), "Spacely", 5, 7, 3 );
+        // TODO: implement repository logic
+        // for now, echo back the id
+        return new SprocketResponseDTO(id, "Spacely", 5, 7, 3 );
     }
 }
