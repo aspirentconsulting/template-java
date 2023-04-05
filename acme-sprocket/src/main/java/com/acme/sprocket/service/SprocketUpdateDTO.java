@@ -10,7 +10,6 @@ import java.util.UUID;
 @Setter
 public class SprocketUpdateDTO {
     // TODO: eventually, move the id field out into a generic wrapper class
-    @NotBlank(message = "Id is mandatory")
     private UUID id;
     @NotBlank(message = "Name is mandatory")
     private String name;
