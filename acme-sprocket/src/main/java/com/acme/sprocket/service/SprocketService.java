@@ -1,6 +1,6 @@
 package com.acme.sprocket.service;
 
-import com.acme.sprocket.common.data.Page;
+import com.acme.sprocket.common.data.page.Page;
 
 import java.util.UUID;
 

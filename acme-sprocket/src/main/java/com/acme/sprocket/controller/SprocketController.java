@@ -1,6 +1,6 @@
 package com.acme.sprocket.controller;
 
-import com.acme.sprocket.common.data.Page;
+import com.acme.sprocket.common.data.page.Page;
 import com.acme.sprocket.service.SprocketFindAllRequest;
 import com.acme.sprocket.service.SprocketInsertDTO;
 import com.acme.sprocket.service.SprocketResponseDTO;

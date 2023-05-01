@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Sprocket", schema = "acme")
+@Table(name = "sprocket")
 public class Sprocket implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

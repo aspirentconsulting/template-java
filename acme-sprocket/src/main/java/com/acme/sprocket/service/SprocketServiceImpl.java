@@ -1,20 +1,54 @@
 package com.acme.sprocket.service;
 
-import com.acme.sprocket.common.data.Page;
+import com.acme.sprocket.common.data.page.Page;
+import com.acme.sprocket.persistence.Sprocket;
+import com.acme.sprocket.repository.SprocketRepository;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.UUID;
 import static org.slf4j.LoggerFactory.getLogger;
-import static com.acme.sprocket.common.data.request.PageUtility.toPage;
-import static java.util.Optional.of;
-import static java.util.Arrays.asList;
+import static com.acme.sprocket.common.data.page.PageUtility.toPage;
+import static com.acme.sprocket.common.data.page.PageRequestUtility.pageRequest;
 
 @Service
 public class SprocketServiceImpl implements SprocketService {
     private static final Logger logger = getLogger(SprocketServiceImpl.class);
+
+    private SprocketRepository sprocketRepository;
+
+    @Autowired
+    public SprocketServiceImpl(SprocketRepository sprocketRepository) {
+        this.sprocketRepository = sprocketRepository;
+    }
+
+    @Override
+    public Page<SprocketResponseDTO> findAll(SprocketFindAllRequest sprocketFindAllRequest) {
+//        SprocketResponseDTO response1 = new SprocketResponseDTO(
+//                UUID.randomUUID(),
+//                "Spacely",
+//                5,
+//                7,
+//                3,
+//                false);
+//
+//        SprocketResponseDTO response2 = new SprocketResponseDTO(
+//                UUID.randomUUID(),
+//                "Cogswell",
+//                9,
+//                11,
+//                5,
+//                false);
+
+        return toPage(sprocketRepository.findAll(pageRequest(
+                sprocketFindAllRequest.getPageNumber(),
+                sprocketFindAllRequest.getPageSize()))
+                .map(this::toSprocketResponseDTO));
+//        return toPage(asList(response1, response2), of(10), of(0));
+
+    }
+
     @Override
     public SprocketResponseDTO insert(final SprocketInsertDTO sprocketInsertDTO) {
         // TODO: this will be replaced by a call to the SprocketRepository object
@@ -64,25 +98,13 @@ public class SprocketServiceImpl implements SprocketService {
                 true);
     }
 
-    @Override
-    public Page<SprocketResponseDTO> findAll(SprocketFindAllRequest sprocketFindAllRequest) {
-        SprocketResponseDTO response1 = new SprocketResponseDTO(
-                UUID.randomUUID(),
-                "Spacely",
-                5,
-                7,
-                3,
-                false);
-
-        SprocketResponseDTO response2 = new SprocketResponseDTO(
-                UUID.randomUUID(),
-                "Cogswell",
-                9,
-                11,
-                5,
-                false);
-
-        return toPage(asList(response1, response2), of(10), of(0));
-
+    private SprocketResponseDTO toSprocketResponseDTO(final Sprocket sprocket) {
+        return new SprocketResponseDTO(
+                sprocket.getId(),
+                sprocket.getName(),
+                sprocket.getPitchDiameterInches(),
+                sprocket.getOutsideDiameterInches(),
+                sprocket.getPitchInches(),
+                sprocket.getDeleted());
     }
 }

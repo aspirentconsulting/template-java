@@ -1,4 +1,4 @@
-package com.acme.sprocket.common.data;
+package com.acme.sprocket.common.data.page;
 
 
 import java.util.List;
