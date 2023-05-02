@@ -7,7 +7,6 @@ import com.acme.sprocket.repository.SprocketRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 import static org.slf4j.LoggerFactory.getLogger;
 import static com.acme.sprocket.common.data.page.PageUtility.toPage;
@@ -26,7 +25,6 @@ public class SprocketServiceImpl implements SprocketService {
 
     @Override
     public Page<SprocketResponseDTO> findAll(SprocketFindAllRequest sprocketFindAllRequest) {
-
         return toPage(sprocketRepository.findAll(pageRequest(
                 sprocketFindAllRequest.getPageNumber(),
                 sprocketFindAllRequest.getPageSize()))
@@ -35,7 +33,6 @@ public class SprocketServiceImpl implements SprocketService {
 
     @Override
     public SprocketResponseDTO findOne(final UUID id) {
-        //TODO: implement ExceptionHandler
         return sprocketRepository.findById(id)
                 .map(this::toSprocketResponseDTO)
                 .orElseThrow(() -> new SprocketNotFoundException(id));
@@ -43,7 +40,6 @@ public class SprocketServiceImpl implements SprocketService {
 
     @Override
     public SprocketResponseDTO insert(final SprocketInsertDTO sprocketInsertDTO) {
-
         return toSprocketResponseDTO(sprocketRepository.saveAndFlush(
                 new Sprocket(
                         sprocketInsertDTO.getName(),
@@ -51,38 +47,30 @@ public class SprocketServiceImpl implements SprocketService {
                         sprocketInsertDTO.getOutsideDiameterInches(),
                         sprocketInsertDTO.getPitchInches()
                 )));
-
-//        return new SprocketResponseDTO(
-//                UUID.randomUUID(),
-//                sprocketInsertDTO.getName(),
-//                sprocketInsertDTO.getPitchDiameterInches(),
-//                sprocketInsertDTO.getOutsideDiameterInches(),
-//                sprocketInsertDTO.getPitchInches(),
-//                false);
     }
 
     @Override
     public SprocketResponseDTO update(UUID id, SprocketUpdateDTO sprocketUpdateDTO) {
-        // TODO: implement repository logic
-        return new SprocketResponseDTO(
-                id,
-                sprocketUpdateDTO.getName(),
-                sprocketUpdateDTO.getPitchDiameterInches(),
-                sprocketUpdateDTO.getOutsideDiameterInches(),
-                sprocketUpdateDTO.getPitchInches(),
-                false);
+        return sprocketRepository.findById(id)
+                .map(sprocket -> {
+                    sprocket.setName(sprocketUpdateDTO.getName());
+                    sprocket.setPitchInches(sprocketUpdateDTO.getPitchInches());
+                    sprocket.setPitchDiameterInches(sprocketUpdateDTO.getPitchDiameterInches());
+                    sprocket.setOutsideDiameterInches(sprocketUpdateDTO.getOutsideDiameterInches());
+
+                    Sprocket updatedSprocket = sprocketRepository.saveAndFlush(sprocket);
+                    return toSprocketResponseDTO(updatedSprocket);
+                }).orElseThrow(() -> new SprocketNotFoundException(id));
     }
 
     @Override
     public SprocketResponseDTO delete(UUID id) {
-        // TODO: implement repository logic
-        return new SprocketResponseDTO(
-                id,
-                "Spacely",
-                5,
-                7,
-                3,
-                true);
+        return sprocketRepository.findById(id)
+                .map(sprocketToDelete -> {
+                    sprocketToDelete.setDeleted(true);
+                    Sprocket updatedSprocket = sprocketRepository.saveAndFlush(sprocketToDelete);
+                    return toSprocketResponseDTO(updatedSprocket);
+                }).orElseThrow(() -> new SprocketNotFoundException(id));
     }
 
     private SprocketResponseDTO toSprocketResponseDTO(final Sprocket sprocket) {

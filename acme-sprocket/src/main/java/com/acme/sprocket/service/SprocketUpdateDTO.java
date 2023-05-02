@@ -1,6 +1,7 @@
 package com.acme.sprocket.service;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,8 +17,6 @@ public class SprocketUpdateDTO {
     private int pitchDiameterInches;
     private int outsideDiameterInches;
     private int pitchInches;
-
-    private boolean deleted = false;
 
     public SprocketUpdateDTO() {}
 
