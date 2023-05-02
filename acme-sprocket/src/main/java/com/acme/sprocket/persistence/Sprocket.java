@@ -35,8 +35,7 @@ public class Sprocket implements Serializable {
 
     public Sprocket() {}
 
-    public Sprocket(UUID id, String name, int pitchDiameterInches, int outsideDiameterInches, int pitchInches) {
-        this.id = id;
+    public Sprocket(String name, int pitchDiameterInches, int outsideDiameterInches, int pitchInches) {
         this.name = name;
         this.pitchDiameterInches = pitchDiameterInches;
         this.outsideDiameterInches = outsideDiameterInches;
