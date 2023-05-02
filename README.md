@@ -10,7 +10,7 @@ To run junit tests: `./mvnw test`
 To run: `./mvnw spring-boot:run`
 
 ### H2 database console
-Access the H2 database web console at http://localhost:8080/h2-console
+Access the H2 database web console at http://localhost:8080/h2-console  
 See application.properties for login credentials and db url
 
 
