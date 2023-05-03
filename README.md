@@ -30,4 +30,4 @@ See application.properties for login credentials and db url
 - data access layer
 	- repositories
 	- mocking/unit-testing
-	- HA in-memory database
+	- H2 in-memory database
