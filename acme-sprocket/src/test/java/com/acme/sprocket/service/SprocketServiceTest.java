@@ -1,23 +1,29 @@
 package com.acme.sprocket.service;
 
+import com.acme.sprocket.common.data.page.Page;
 import com.acme.sprocket.exception.SprocketNotFoundException;
 import com.acme.sprocket.persistence.Sprocket;
 import com.acme.sprocket.repository.SprocketRepository;
-import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+
 import java.util.UUID;
+
+import static com.acme.sprocket.common.data.page.PageRequestUtility.pageRequest;
+import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-import static org.junit.jupiter.api.Assertions.fail;
-import static java.util.Optional.of;
+
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -114,31 +120,74 @@ public class SprocketServiceTest {
 
     @Test
     public void findOneByIdSuccess() {
-        // GIVEN - a valid identifier
-        UUID uuid = UUID.randomUUID();
+        // GIVEN - a Sprocket that has already been inserted
+        SprocketResponseDTO sprocketInsertResponse = sprocketService.insert(sprocketInsertRequest);
+
+        // set up mock for the findById call
+        given(sprocketRepository.findById(any())).willReturn(of(sprocket));
 
         // WHEN - we request a sprocket by id
-        SprocketResponseDTO response = sprocketService.findOne(uuid);
+        SprocketResponseDTO response = sprocketService.findOne(sprocketInsertResponse.getId());
 
         // THEN - the sprocket is returned
-        BDDAssertions.then(response.getId()).isEqualTo(uuid);
+        then(response.getId()).isEqualTo(sprocketInsertResponse.getId());
     }
 
     @Test
-    public void findOneByIdFailure() {
-        fail("findOneByIdFailure() not yet implemented");
+    public void findOneByIdSprocketNotFound() {
+        // GIVEN - a Sprocket that has already been inserted
+        SprocketResponseDTO sprocketInsertResponse = sprocketService.insert(sprocketInsertRequest);
+
+        // set up mock for the find call
+        given(sprocketRepository.findById(any())).willReturn(of(sprocket));
+
+        // set up mock calls for update
+        UUID invalidUUID = randomUUID();
+        SprocketNotFoundException expectedException = new SprocketNotFoundException(invalidUUID);
+        given(sprocketRepository.findById(any())).willThrow(expectedException);
+
+        // WHEN - find using an invalid uuid
+        try {
+            SprocketResponseDTO response = sprocketService.findOne(invalidUUID);
+        } catch (SprocketNotFoundException actualException) {
+            // THEN
+            then(expectedException.toString()).isEqualTo(actualException.toString());
+        }
     }
 
     @Test
     public void findAllSuccess() {
-        fail("findAllSuccess() not yet implemented");
+        // GIVEN - a Sprocket that has already been inserted
+        SprocketResponseDTO sprocketInsertResponse = sprocketService.insert(sprocketInsertRequest);
+
+        // set up mock for the findAll call
+        org.springframework.data.domain.Page<Sprocket> page =
+                new PageImpl<Sprocket>(singletonList(sprocket), PageRequest.of(0, 10), 1);
+        given(sprocketRepository.findAll(pageRequest(empty(), empty()))).willReturn(page);
+
+        // WHEN
+        Page<SprocketResponseDTO> sprocketResponsePage = sprocketService.findAll(new SprocketFindAllRequest());
+
+        // THEN
+        then(sprocketResponsePage.getElementCount()).isEqualTo(page.getTotalElements());
+        then(sprocketResponsePage.getPageCount()).isEqualTo(page.getTotalPages());
+        then(sprocketResponsePage.getPageSize()).isEqualTo(1);
+        then(sprocketResponsePage.getPageNumber()).isEqualTo(0);
     }
 
 
     @Test
     public void deleteSuccess() {
-        fail("deleteSuccess() not yet implemented");
+        // GIVEN - a Sprocket that has already been inserted
+        SprocketResponseDTO sprocketInsertResponse = sprocketService.insert(sprocketInsertRequest);
+
+        // set up mock for the delete call
+        given(sprocketRepository.findById(any())).willReturn(of(sprocket));
+
+        // WHEN
+        SprocketResponseDTO sprocketDeleteResponse = sprocketService.delete(sprocketInsertResponse.getId());
+
+        // THEN
+        then(sprocketDeleteResponse.isDeleted()).isTrue();
     }
-
-
 }
